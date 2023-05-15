@@ -1,25 +1,54 @@
-import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+  const[Data,setData] = useState(null)
+  const fetchData =()=>{
+  axios.get('http://localhost:5000/')
+  .then(res => {
+  setData(res.data) 
+  })
+  }
+  useEffect(()=>{
+    fetchData()
+  },[])
 
+  const filterDataByName = (searchTerm) => {
+    const filteredResults = Data.filter(item => item.title.includes(searchTerm));
+    setData(filteredResults);
+  }
+ 
+    return (
+      <>
+<input name="firstName"
+ onChange={(e) => filterDataByName(e.target.value)}
+ />     
+  <div className='container'>
+   {
+   Data?.map((e)=>{
+    return(
+    <div className='card'>
+      <p>{e.title}</p>
+      <img src={e.thumbnail}></img>
+      <p>{e.description}</p>
+
+    </div>
+
+    )
+      
+        })
+   }
+
+   </div>
+      </>
+     )
+
+
+
+
+ 
+
+ 
+}
 export default App;
